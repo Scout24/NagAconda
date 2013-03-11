@@ -3,8 +3,6 @@ Test some common usages of the warning/critical threshold settings.
 """
 
 import sys
-from nose import with_setup
-from NagAconda import Plugin
 from test import PlugTest
 
 class TestRanges(PlugTest):
@@ -33,6 +31,21 @@ class TestRanges(PlugTest):
 
         for (t_val, t_status) in expected.items():
             assert self.plugin.set_value('test', t_val) == t_status
+
+    def test_without_threshold(self):
+        """
+        Test without thresholds.
+
+        """
+        self.plugin.enable_status('warning')
+        self.plugin.enable_status('critical')
+        self.plugin.start()
+
+        expected = {7: 'ok', 15: 'ok', 17: 'ok'}
+
+        for (t_val, t_status) in expected.items():
+            assert self.plugin.set_value('test', t_val) == t_status
+
 
     def test_inverted_threshold(self):
         """
@@ -90,7 +103,7 @@ class TestRanges(PlugTest):
         self.plugin.start()
 
         expected = {7: 'ok', 10: 'ok', 12: 'warning',
-                    15: 'warning', 17: 'critical' }
+                    15: 'warning', 17: 'critical'}
 
         for (t_val, t_status) in expected.items():
             print "Testing %s for %s" % (t_val, t_status)

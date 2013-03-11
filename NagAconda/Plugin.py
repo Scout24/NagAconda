@@ -74,7 +74,7 @@ class Plugin:
        After `start` is called, all command-line options are read, and anything
        left over is placed into this object for further use. Most Nagios
        parsers use explicit option setting, so you might never use this.
-    
+
     """
 
     def __init__(self, description, version):
@@ -119,7 +119,7 @@ class Plugin:
 
         self.__opt_parser.add_option('-v', '--verbose', action='count',
             help="Get more verbose status output. "
-            "Can be specified up to three times"
+                 "Can be specified up to three times"
         )
 
         self.__opt_parser.set_usage('%prog')
@@ -142,7 +142,7 @@ class Plugin:
 
         """
 
-        # Before we really do anything, make sure a warning or critical 
+        # Before we really do anything, make sure a warning or critical
         # threshold were even set.
 
         self.__print_verbose('range was ' + range_type)
@@ -166,16 +166,16 @@ class Plugin:
                 return
             raise UserWarning, (
                 "Please set part %s of the %s threshold!" % (
-                threshold, range_type))
+                    threshold, range_type))
 
         # The option parser should have already split these into proper
         # bottom, top, and match inversion, so long as the array element
         # is defined Perform our range test and set the exit status.
-        self.__print_verbose(range_list[threshold-1])
-        (bottom, top, invert) = range_list[threshold-1]
+        self.__print_verbose(range_list[threshold - 1])
+        (bottom, top, invert) = range_list[threshold - 1]
 
         if ((not invert and (val < bottom or val > top)) or
-           (invert and val >= bottom and val <= top)):
+            (invert and val >= bottom and val <= top)):
             self.__exit_status = range_type
             self.__perf[name]['state'] = range_type
 
@@ -448,11 +448,11 @@ class Plugin:
         # We'll use the opportunity to check the status ranges right when the
         # variable is set so we don't have to loop through all of them later.
 
-        if len(self.__warning) > 0:
+        if self.__warning is not None and len(self.__warning) > 0:
             self.__print_verbose("checking warning")
             self.__check_range('warning', name)
 
-        if len(self.__critical) > 0:
+        if self.__critical is not None and len(self.__critical) > 0:
             self.__print_verbose("checking critical")
             self.__check_range('critical', name)
 
