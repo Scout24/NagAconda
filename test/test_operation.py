@@ -91,3 +91,14 @@ class TestOperation(PlugTest):
             assert False
 
 
+    def test_omit_performance_output(self):
+        self.plugin.start()
+        self.plugin.set_value('foo', 9)
+
+        self.plugin.set_print_performance_data(False)
+        result_output = self.plugin.get_result_output()
+        assert "|" not in result_output
+
+        self.plugin.set_print_performance_data(True)
+        result_output = self.plugin.get_result_output()
+        assert "|" in result_output

@@ -106,6 +106,8 @@ class Plugin:
         self.__warning = []        # Array of warning ranges.
         self.__critical = []       # Array of critical ranges.
 
+        self.__print_performance_data = True
+
         # With our variables out of the way, let's start up the option parser
         # with a version and verbose setting, along with a sane usage
         # statement.
@@ -283,6 +285,11 @@ class Plugin:
         # separate to val;warn;crit;min;max with the scale included in all
         # output. So, let's get cracking...
 
+        print self.get_result_output() 
+        sys.exit(exit_value)
+
+
+    def get_result_output(self):
         perfs = []
 
         for (perf_name, perf_dict) in self.__perf.items():
@@ -295,15 +302,16 @@ class Plugin:
             )
 
         perf_string = ''
-        if len(perfs) > 0:
+        if self.__print_performance_data and len(perfs) > 0:
             perf_string = '|' + ' '.join(["%s" % item for item in perfs])
 
         exit_status = self.__exit_status.capitalize()
         if self.__exit_message is not None:
             exit_status += ', %s' % self.__exit_message
 
-        print 'Status ' + exit_status + perf_string
-        sys.exit(exit_value)
+        return 'Status ' + exit_status + perf_string
+
+
 
     def set_range(self, range_type, range_end, range_start=0,
                  range_num=1, invert=False):
@@ -550,6 +558,10 @@ class Plugin:
         """
         print 'Status Unknown: ' + message
         sys.exit(3)
+
+
+    def set_print_performance_data(self,value):
+        self.__print_performance_data = value
 
 def convert_range(option, opt_str, value, parser):
     """
